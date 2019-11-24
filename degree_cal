@@ -1,0 +1,50 @@
+module degree_cal(
+		i_reset,
+		iv_degree,
+		i_fsyn,
+		
+		ov_rotate_degree,
+		ov_rotate_num
+		);
+		
+input i_reset;
+input i_fsyn;
+input [8:0] iv_degree;
+
+output [6:0] ov_rotate_degree;
+output [1:0] ov_rotate_num;
+
+reg [8:0] rv_rotate_degree;
+reg [1:0] ov_rotate_num;
+always@(*)begin
+	if(i_reset)begin
+		rv_rotate_degree <= 9'd0;
+		ov_rotate_num <= 2'd0;
+	end
+	else if(i_fsyn) begin
+		if(iv_degree >= 9'd360)begin
+			rv_rotate_degree <= 9'b111111111;
+			ov_rotate_num <= 2'd0;
+		end
+		else if(iv_degree >= 9'd270)begin
+			rv_rotate_degree <= iv_degree - 9'd270;
+			ov_rotate_num <= 2'd3;
+		end
+		else if(iv_degree >= 9'd180)begin
+			rv_rotate_degree <= iv_degree - 9'd180;
+			ov_rotate_num <= 2'd2;
+		end
+		else if(iv_degree >= 9'd90)begin
+			rv_rotate_degree <= iv_degree - 9'd90;
+			ov_rotate_num <= 2'd1;
+		end
+		else begin
+			rv_rotate_degree <= iv_degree;
+			ov_rotate_num <= 2'd0;
+		end
+	end
+end
+
+assign ov_rotate_degree = rv_rotate_degree[0+:7];
+
+endmodule
